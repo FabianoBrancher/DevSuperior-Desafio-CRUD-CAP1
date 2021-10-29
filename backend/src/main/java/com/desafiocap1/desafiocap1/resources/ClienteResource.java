@@ -1,5 +1,7 @@
 package com.desafiocap1.desafiocap1.resources;
 
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.desafiocap1.desafiocap1.dto.ClientDTO;
-import com.desafiocap1.desafiocap1.entities.Client;
 import com.desafiocap1.desafiocap1.services.ClientService;
 
 @RestController
@@ -46,8 +48,9 @@ public class ClienteResource {
 	
 	@PostMapping
 	public ResponseEntity<ClientDTO> insert(@RequestBody ClientDTO dto) {
-		ClientDTO clientDTO = service.insert(dto);
-		return ResponseEntity.ok().body(clientDTO);
+		dto = service.insert(dto);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
+		return ResponseEntity.created(uri).body(dto);
 	}
 	
 }
